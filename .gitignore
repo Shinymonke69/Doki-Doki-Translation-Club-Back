@@ -1,0 +1,9 @@
+# Environtment
+node_modules/
+.env
+
+# Databases
+database.db
+
+# Trash
+*.zip

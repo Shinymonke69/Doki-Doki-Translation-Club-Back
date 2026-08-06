@@ -1,0 +1,81 @@
+import express from "express";
+import cors from "cors";
+import { DatabaseSync } from "node:sqlite";
+import translationsRouter from "./routes/translations.js";
+
+const app = express();
+const db = new DatabaseSync("database.db");
+
+const adminName = process.env.LOGIN;
+const adminKey = process.env.PASS;
+
+db.exec(`
+CREATE TABLE IF NOT EXISTS translations(
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  description TEXT NOT NULL,
+  banner TEXT NOT NULL,
+  image TEXT NOT NULL,
+  linkPC TEXT NOT NULL,
+  linkMobile TEXT NOT NULL
+);
+`);
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS admins(
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  key TEXT NOT NULL
+  );
+`);
+
+const exists = db
+  .prepare(
+    `
+  SELECT 1
+  FROM admins
+  WHERE name = ?
+`,
+  )
+  .get(adminName);
+
+if (!exists) {
+  db.prepare(
+    `
+    INSERT INTO admins (name, key)
+    VALUES (?, ?)
+  `,
+  ).run(adminName, adminKey);
+
+  console.log("Admin criado.");
+}
+
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://www.dokidokitranslationclub.com.br",
+      "https://ddtc.squareweb.app",
+      "https://thaleskaua66.github.io",
+    ],
+  }),
+);
+app.use(express.json());
+
+// routers
+app.use("/translations", translationsRouter);
+
+app.get("/", (req, res) => {
+  res.json({
+    message: "Server working.",
+  });
+});
+
+app.listen(3000, () => {
+  console.log("Running");
+});
+
+// deploy:
+// app.listen(Number(process.env.PORT), process.env.HOST, () => {
+//   console.log("Running");
+// });
