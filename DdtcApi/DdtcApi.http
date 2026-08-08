@@ -1,0 +1,6 @@
+@DdtcApi_HostAddress = http://localhost:5205
+
+GET {{DdtcApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
