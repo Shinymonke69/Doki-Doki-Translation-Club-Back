@@ -3,7 +3,8 @@ node_modules/
 .env
 
 # Databases
-database.db
+*.db
 
 # Trash
 *.zip
+*.rest
