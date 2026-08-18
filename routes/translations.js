@@ -5,6 +5,18 @@ const db = new DatabaseSync("database.db");
 
 const router = express.Router();
 
+db.exec(`
+  CREATE TABLE IF NOT EXISTS translations(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    banner TEXT NOT NULL,
+    image TEXT NOT NULL,
+    linkPC TEXT NOT NULL,
+    linkMobile TEXT NOT NULL
+  );
+`);
+
 const checkAuth = (adminKey) => {
   const auth = db.prepare(`
     SELECT 1
@@ -35,7 +47,6 @@ router.post("/new", (req, res) => {
   res.send({
     message: `Mod "${name}" adicionado à database, confira a aba de traduções para garantir que não há erros visuais.`,
   });
-  console.log("new database entry");
 });
 
 router.post("/remove", (req, res) => {
@@ -57,7 +68,6 @@ router.post("/remove", (req, res) => {
     success: true,
     changes: result.changes,
   });
-  console.log("Deleted a mod");
 });
 
 router.get("/all", (req, res) => {
