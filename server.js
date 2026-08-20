@@ -46,9 +46,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://www.dokidokitranslationclub.com.br",
-      "https://ddtc.squareweb.app",
-      "https://thaleskaua66.github.io",
+      "https://doki-doki-translation-club.vercel.app",
+      "https://isneiki.github.io",
     ],
   }),
 );
