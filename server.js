@@ -1,25 +1,17 @@
 import express from "express";
 import cors from "cors";
 import { DatabaseSync } from "node:sqlite";
+
 import translationsRouter from "./routes/translations.js";
+// import usersRouter from "./routes/users.js";
 
 const app = express();
 const db = new DatabaseSync("database.db");
 
+process.loadEnvFile();
+
 const adminName = process.env.LOGIN;
 const adminKey = process.env.PASS;
-
-db.exec(`
-CREATE TABLE IF NOT EXISTS translations(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL,
-  description TEXT NOT NULL,
-  banner TEXT NOT NULL,
-  image TEXT NOT NULL,
-  linkPC TEXT NOT NULL,
-  linkMobile TEXT NOT NULL
-);
-`);
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS admins(
@@ -64,6 +56,7 @@ app.use(express.json());
 
 // routers
 app.use("/translations", translationsRouter);
+// app.use("/users", usersRouter);
 
 app.get("/", (req, res) => {
   res.json({

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\gabri\\Documents\\DDTC_BACKEND\\Doki-Doki-Translation-Club-Back\\DdtcApi\\DdtcApi.csproj": {}
+    "c:\\Users\\gabri\\Documents\\DDTC_BACKEND\\Doki-Doki-Translation-Club-Back\\DdtcApi\\DdtcApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\gabri\\Documents\\DDTC_BACKEND\\Doki-Doki-Translation-Club-Back\\DdtcApi\\DdtcApi.csproj": {
+    "c:\\Users\\gabri\\Documents\\DDTC_BACKEND\\Doki-Doki-Translation-Club-Back\\DdtcApi\\DdtcApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\gabri\\Documents\\DDTC_BACKEND\\Doki-Doki-Translation-Club-Back\\DdtcApi\\DdtcApi.csproj",
+        "projectUniqueName": "c:\\Users\\gabri\\Documents\\DDTC_BACKEND\\Doki-Doki-Translation-Club-Back\\DdtcApi\\DdtcApi.csproj",
         "projectName": "DdtcApi",
-        "projectPath": "C:\\Users\\gabri\\Documents\\DDTC_BACKEND\\Doki-Doki-Translation-Club-Back\\DdtcApi\\DdtcApi.csproj",
+        "projectPath": "c:\\Users\\gabri\\Documents\\DDTC_BACKEND\\Doki-Doki-Translation-Club-Back\\DdtcApi\\DdtcApi.csproj",
         "packagesPath": "C:\\Users\\gabri\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\gabri\\Documents\\DDTC_BACKEND\\Doki-Doki-Translation-Club-Back\\DdtcApi\\obj\\",
+        "outputPath": "c:\\Users\\gabri\\Documents\\DDTC_BACKEND\\Doki-Doki-Translation-Club-Back\\DdtcApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\gabri\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -24,6 +24,7 @@
         },
         "frameworks": {
           "net10.0": {
+            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {}
           }
@@ -42,6 +43,7 @@
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "dependencies": {
             "Microsoft.AspNetCore.OpenApi": {
