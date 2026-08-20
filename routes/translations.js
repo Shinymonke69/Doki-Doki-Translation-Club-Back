@@ -17,7 +17,13 @@ db.exec(`
   );
 `);
 
-const checkAuth = (adminKey) => {
+const checkAuth = (authHeader) => {
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return false;
+  }
+
+  const adminKey = authHeader.split(" ")[1];
+
   const auth = db.prepare(`
     SELECT 1
     FROM admins
@@ -28,13 +34,13 @@ const checkAuth = (adminKey) => {
 };
 
 router.post("/new", (req, res) => {
-  const { name, description, banner, img, adminKey, linkPC, linkMobile } =
-    req.body;
-  console.log(req.body);
+  const { name, description, banner, img, linkPC, linkMobile } = req.body;
 
-  if (!checkAuth(adminKey)) {
+  const authHeader = req.headers.authorization;
+
+  if (!checkAuth(authHeader)) {
     return res.status(401).json({
-      message: "Chave inválida.",
+      message: "Chave inválida ou inexistente.",
     });
   }
 
@@ -50,11 +56,13 @@ router.post("/new", (req, res) => {
 });
 
 router.post("/remove", (req, res) => {
-  const { id, adminKey } = req.body;
+  const { id } = req.body;
 
-  if (!checkAuth(adminKey)) {
+  const authHeader = req.headers.authorization;
+
+  if (!checkAuth(authHeader)) {
     return res.status(401).json({
-      message: "Chave inválida.",
+      message: "Chave inválida ou inexistente.",
     });
   }
 
@@ -67,6 +75,45 @@ router.post("/remove", (req, res) => {
   res.json({
     success: true,
     changes: result.changes,
+  });
+});
+
+router.post("/edit/:id", (req, res) => {
+  const { name, description, banner, img, linkPC, linkMobile } = req.body;
+
+  const authHeader = req.headers.authorization;
+
+  if (!checkAuth(authHeader)) {
+    return res.status(401).json({
+      message: "Chave inválida ou inexistente.",
+    });
+  }
+
+  const stmt = db.prepare(`
+    UPDATE translations 
+    SET name = ?,
+    description = ?,
+    banner = ?,
+    image = ?,
+    linkPC = ?,
+    linkMobile = ? 
+    WHERE id = ?;
+  `);
+
+  const result = stmt.run(
+    name,
+    description,
+    banner,
+    img,
+    linkPC,
+    linkMobile,
+    Number(req.params.id),
+  );
+
+  res.json({
+    success: true,
+    changes: result.changes,
+    message: "Mudanças feitas!",
   });
 });
 
