@@ -63,11 +63,12 @@ app.get("/", (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log("Running");
-});
-
-// deploy:
-// app.listen(Number(process.env.PORT), process.env.HOST, () => {
+// Local:
+// app.listen(3000, () => {
 //   console.log("Running");
 // });
+
+// deploy:
+app.listen(Number(process.env.PORT), process.env.HOST, () => {
+  console.log("Running");
+});
