@@ -1,9 +1,9 @@
+using System.Text.Json.Serialization;
 using DdtcApi.Data;
 using DdtcApi.Filters;
 using DdtcApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json.Serialization;
 
 namespace DdtcApi.Controllers
 {
@@ -13,8 +13,8 @@ namespace DdtcApi.Controllers
     {
         private readonly AppDbContext _context = context;
 
-        // GET: api/translations
-        [HttpGet]
+        // GET: api/translations/all
+        [HttpGet("all")]
         public async Task<IActionResult> GetAll()
         {
             var translations = await _context.Translations.OrderBy(t => t.Id).ToListAsync();
@@ -36,18 +36,15 @@ namespace DdtcApi.Controllers
             var translation = await _context.Translations.FindAsync(id);
             if (translation == null)
             {
-                // To maintain compatibility with the weird behavior of the previous API:
-                // Previous API returned undefined/null for 'translation' field if not found, or { 1: 1 } if found.
-                // We'll return the actual translation object now (fixing the bug), or null.
                 return Ok(new { translation = (Translation?)null });
             }
 
             return Ok(new { translation });
         }
 
-        // POST: api/translations
-        [HttpPost]
-        [ApiKey] // Protect this route
+        // POST: api/translations/new
+        [HttpPost("new")]
+        [ApiKey]
         public async Task<IActionResult> Create([FromBody] TranslationCreateDto dto)
         {
             if (!ModelState.IsValid)
@@ -60,7 +57,7 @@ namespace DdtcApi.Controllers
                 Name = dto.Name,
                 Description = dto.Description,
                 Banner = dto.Banner,
-                Image = dto.Img, // Node.js expected 'img' in body
+                Image = dto.Img,
                 LinkPc = dto.LinkPc,
                 LinkMobile = dto.LinkMobile
             };
@@ -74,12 +71,12 @@ namespace DdtcApi.Controllers
             });
         }
 
-        // DELETE: api/translations/5
-        [HttpDelete("{id}")]
-        [ApiKey] // Protect this route
-        public async Task<IActionResult> Delete(int id)
+        // POST: api/translations/remove
+        [HttpPost("remove")]
+        [ApiKey]
+        public async Task<IActionResult> Delete([FromBody] TranslationRemoveDto dto)
         {
-            var translation = await _context.Translations.FindAsync(id);
+            var translation = await _context.Translations.FindAsync(dto.Id);
             if (translation == null)
             {
                 return NotFound(new { success = false, message = "Mod não encontrado." });
@@ -94,11 +91,59 @@ namespace DdtcApi.Controllers
                 changes
             });
         }
+
+        // POST: api/translations/edit
+        [HttpPost("edit")]
+        [ApiKey]
+        public async Task<IActionResult> Edit([FromBody] TranslationEditDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var translation = await _context.Translations.FindAsync(dto.Id);
+            if (translation == null)
+            {
+                return NotFound(new { success = false, message = "Mod não encontrado." });
+            }
+
+            translation.Name = dto.Name;
+            translation.Description = dto.Description;
+            translation.Banner = dto.Banner;
+            translation.Image = dto.Img;
+            translation.LinkPc = dto.LinkPc;
+            translation.LinkMobile = dto.LinkMobile;
+
+            _context.Translations.Update(translation);
+            var changes = await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = $"Mod \"{translation.Name}\" atualizado com sucesso."
+            });
+        }
     }
 
-    // DTO to map the frontend request body
     public class TranslationCreateDto
     {
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Banner { get; set; } = string.Empty;
+        public string Img { get; set; } = string.Empty;
+        [JsonPropertyName("linkPC")]
+        public string LinkPc { get; set; } = string.Empty;
+        public string LinkMobile { get; set; } = string.Empty;
+    }
+
+    public class TranslationRemoveDto
+    {
+        public int Id { get; set; }
+    }
+
+    public class TranslationEditDto
+    {
+        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string Banner { get; set; } = string.Empty;
