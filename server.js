@@ -8,7 +8,8 @@ import translationsRouter from "./routes/translations.js";
 const app = express();
 const db = new DatabaseSync("database.db");
 
-process.loadEnvFile();
+// for local use:
+// process.loadEnvFile();
 
 const adminName = process.env.LOGIN;
 const adminKey = process.env.PASS;
