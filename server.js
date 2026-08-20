@@ -8,7 +8,8 @@ import translationsRouter from "./routes/translations.js";
 const app = express();
 const db = new DatabaseSync("database.db");
 
-process.loadEnvFile();
+// for local use:
+// process.loadEnvFile();
 
 const adminName = process.env.LOGIN;
 const adminKey = process.env.PASS;
@@ -67,3 +68,8 @@ app.get("/", (req, res) => {
 // app.listen(3000, () => {
 //   console.log("Running");
 // });
+
+// deploy:
+app.listen(Number(process.env.PORT), process.env.HOST, () => {
+  console.log("Running");
+});
